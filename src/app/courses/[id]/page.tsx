@@ -4,7 +4,7 @@ import React, { useState, use } from "react";
 import Link from "next/link";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { COURSES_DATA, REVIEWS_DATA } from "@/data/mockData";
+import { useCourse } from "@/hooks/useCatalog";
 import { SyllabusAccordion } from "@/components/SyllabusAccordion";
 import { PreviewModal } from "@/components/PreviewModal";
 import {
@@ -28,7 +28,11 @@ interface CourseDetailPageProps {
 export default function CourseDetailPage({ params }: CourseDetailPageProps) {
   const resolvedParams = use(params);
   const courseId = resolvedParams.id;
-  const course = COURSES_DATA.find((c) => c.id === courseId) || COURSES_DATA[0];
+  const {
+    data: { course, reviews },
+    isLoading,
+    error,
+  } = useCourse(courseId);
 
   const [activeTab, setActiveTab] = useState<"overview" | "syllabus" | "tutor" | "reviews">("overview");
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
@@ -36,6 +40,41 @@ export default function CourseDetailPage({ params }: CourseDetailPageProps) {
   const handleOpenPreview = () => {
     setIsPreviewOpen(true);
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-[#f8faf8]">
+        <Header />
+        <main className="mx-auto max-w-[1180px] px-5 py-16">
+          <div className="h-[520px] animate-pulse rounded-2xl border border-bio-line bg-white" />
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (error || !course) {
+    return (
+      <div className="min-h-screen bg-[#f8faf8]">
+        <Header />
+        <main className="mx-auto max-w-[720px] px-5 py-24 text-center">
+          <h1 className="text-2xl font-extrabold text-bio-ink">
+            ไม่พบคอร์สเรียนนี้
+          </h1>
+          <p className="mt-2 text-sm text-bio-muted">
+            คอร์สอาจถูกยกเลิกการเผยแพร่ หรือเกิดปัญหาในการเชื่อมต่อฐานข้อมูล
+          </p>
+          <Link
+            href="/courses"
+            className="mt-6 inline-flex rounded-xl bg-bio-green px-5 py-3 text-sm font-bold text-white"
+          >
+            กลับไปดูคอร์สทั้งหมด
+          </Link>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col bg-[#f8faf8]">
@@ -260,7 +299,7 @@ export default function CourseDetailPage({ params }: CourseDetailPageProps) {
                   </div>
 
                   <div className="grid grid-cols-1 gap-4">
-                    {REVIEWS_DATA.map((review) => (
+                    {reviews.map((review) => (
                       <div key={review.id} className="p-4 border border-bio-line rounded-xl bg-bio-cream/30 space-y-2">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
@@ -273,7 +312,7 @@ export default function CourseDetailPage({ params }: CourseDetailPageProps) {
                             </div>
                           </div>
                           <div className="flex text-amber-400">
-                            {[...Array(5)].map((_, i) => (
+                            {[...Array(review.rating ?? 5)].map((_, i) => (
                               <Star key={i} className="w-3.5 h-3.5 fill-current" />
                             ))}
                           </div>
@@ -281,6 +320,11 @@ export default function CourseDetailPage({ params }: CourseDetailPageProps) {
                         <p className="text-xs text-bio-ink leading-relaxed m-0">{review.text}</p>
                       </div>
                     ))}
+                    {reviews.length === 0 && (
+                      <div className="rounded-xl border border-dashed border-bio-line bg-bio-cream/30 p-8 text-center text-sm text-bio-muted">
+                        ยังไม่มีรีวิวที่เผยแพร่สำหรับคอร์สนี้
+                      </div>
+                    )}
                   </div>
                 </div>
               )}

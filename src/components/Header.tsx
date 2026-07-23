@@ -1,188 +1,336 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
+import {
+  BookOpen,
+  ChevronRight,
+  LayoutDashboard,
+  LogOut,
+  Menu,
+  ShieldCheck,
+  UserRound,
+  X,
+} from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 
-export const Header: React.FC = () => {
+type NavLink = {
+  label: string;
+  href: string;
+  section?: string;
+};
+
+export function Header() {
+  const pathname = usePathname();
+  const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
-  const [authReady, setAuthReady] = useState(false);
-  const pathname = usePathname();
+  const [isAuthReady, setIsAuthReady] = useState(false);
+  const [isSigningOut, setIsSigningOut] = useState(false);
   const isHomePage = pathname === "/";
+
+  const navLinks: NavLink[] = [
+    { label: "หน้าหลัก", href: isHomePage ? "#top" : "/" },
+    { label: "คอร์สเรียน", href: "/courses" },
+    {
+      label: "เกี่ยวกับเรา",
+      href: isHomePage ? "#about" : "/#about",
+      section: "about",
+    },
+    {
+      label: "รีวิวผู้เรียน",
+      href: isHomePage ? "#reviews" : "/#reviews",
+      section: "reviews",
+    },
+    {
+      label: "บทความ",
+      href: isHomePage ? "#articles" : "/#articles",
+      section: "articles",
+    },
+  ];
 
   useEffect(() => {
     const supabase = createClient();
-
-    void supabase.auth.getUser().then(({ data }) => {
-      setUser(data.user);
-      setAuthReady(true);
-    });
-
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
-      setAuthReady(true);
+      setIsAuthReady(true);
     });
 
     return () => subscription.unsubscribe();
   }, []);
 
-  const navLinks = [
-    { label: "หน้าหลัก", href: isHomePage ? "#top" : "/" },
-    { label: "คอร์สเรียนทั้งหมด", href: "/courses" },
-    { label: "เกี่ยวกับเรา", href: isHomePage ? "#about" : "/#about" },
-    { label: "รีวิว", href: isHomePage ? "#reviews" : "/#reviews" },
-    { label: "บทความ", href: isHomePage ? "#articles" : "/#articles" },
-    { label: "ติดต่อเรา", href: isHomePage ? "#contact" : "/#contact" },
-  ];
-
-  const handleNavClick = () => {
+  useEffect(() => {
     setMobileMenuOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMobileMenuOpen(false);
+    };
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
+  }, [mobileMenuOpen]);
+
+  const isActive = (link: NavLink) => {
+    if (link.section) return false;
+    if (link.href === "/courses") return pathname.startsWith("/courses");
+    if (link.href === "/" || link.href === "#top") return pathname === "/";
+    return pathname === link.href;
   };
 
   const handleSignOut = async () => {
-    const supabase = createClient();
-    await supabase.auth.signOut({ scope: "local" });
-    setMobileMenuOpen(false);
+    if (isSigningOut) return;
+    setIsSigningOut(true);
+    const { error } = await createClient().auth.signOut({ scope: "local" });
+    setIsSigningOut(false);
+
+    if (!error) {
+      setMobileMenuOpen(false);
+      router.replace("/");
+      router.refresh();
+    }
   };
 
   const displayName =
-    (user?.user_metadata.full_name as string | undefined)?.split(" ")[0] ??
-    user?.email ??
-    "บัญชีของฉัน";
+    user?.user_metadata?.full_name?.trim() || user?.email?.split("@")[0];
 
   return (
-    <header className="sticky top-0 z-50 bg-white/94 backdrop-blur-md border-b border-bio-line/80">
-      <div className="max-w-[1180px] px-5 mx-auto h-[76px] flex items-center justify-between gap-[34px]">
-        {/* Brand */}
+    <header className="sticky top-0 z-50 border-b border-bio-line/80 bg-white/95 shadow-[0_1px_12px_rgba(15,76,42,0.04)] backdrop-blur-xl">
+      <div className="mx-auto flex h-[70px] max-w-[1180px] items-center gap-5 px-5">
         <Link
           href="/"
-          className="relative text-[34px] font-extrabold text-bio-green tracking-tighter"
-          aria-label="inbio home"
+          className="relative shrink-0 text-[32px] font-extrabold tracking-tighter text-bio-green"
+          aria-label="กลับหน้าหลัก inbio"
         >
-          <span className="absolute -top-[1px] -right-1 text-xs text-[#69a94f] rotate-[-25deg]">
+          <span className="absolute -right-1 -top-px rotate-[-25deg] text-xs text-[#69a94f]">
             ●
           </span>
           inbio
         </Link>
 
-        {/* Desktop Nav */}
-        <nav className="hidden lg:flex items-center gap-[28px] ml-auto">
-          {navLinks.map((link) => (
-            <Link
-              key={link.label}
-              href={link.href}
-              className={`text-sm font-semibold transition-colors duration-200 ${
-                pathname === link.href
-                  ? "text-bio-green font-bold"
-                  : "text-[#304138] hover:text-bio-green"
-              }`}
-            >
-              {link.label}
-            </Link>
-          ))}
+        <nav
+          className="ml-auto hidden items-center gap-1 lg:flex"
+          aria-label="เมนูหลัก"
+        >
+          {navLinks.map((link) => {
+            const active = isActive(link);
+            return (
+              <Link
+                key={link.label}
+                href={link.href}
+                aria-current={active ? "page" : undefined}
+                className={`rounded-lg px-3 py-2 text-sm font-semibold transition-colors ${
+                  active
+                    ? "bg-bio-green-soft text-bio-green"
+                    : "text-[#405147] hover:bg-bio-cream hover:text-bio-green"
+                }`}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
         </nav>
 
-        {/* Action Buttons */}
-        <div className="hidden lg:flex items-center gap-2.5">
-          {authReady && user ? (
+        <div className="hidden min-w-[180px] items-center justify-end gap-2 lg:flex">
+          {!isAuthReady ? (
+            <div
+              className="h-10 w-36 animate-pulse rounded-xl bg-bio-cream"
+              aria-label="กำลังตรวจสอบสถานะผู้ใช้"
+            />
+          ) : user ? (
             <>
-              <span className="max-w-40 truncate text-sm font-bold text-bio-ink">
-                สวัสดี {displayName}
-              </span>
+              <div
+                className="flex min-w-0 items-center gap-2 rounded-xl border border-bio-line bg-[#f8faf8] px-3 py-2"
+                title={user.email}
+              >
+                <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-bio-green-soft text-bio-green">
+                  <UserRound className="h-4 w-4" />
+                </span>
+                <span className="max-w-24 truncate text-xs font-bold text-bio-ink">
+                  {displayName}
+                </span>
+              </div>
+              {user.app_metadata?.role === "admin" && (
+                <Link
+                  href="/admin"
+                  className="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-bio-line text-bio-green transition-colors hover:bg-bio-green-soft"
+                  aria-label="เปิดศูนย์จัดการ Admin"
+                  title="Admin Center"
+                >
+                  <ShieldCheck className="h-4 w-4" />
+                </Link>
+              )}
+              <Link
+                href="/dashboard"
+                className="inline-flex items-center gap-1.5 rounded-xl bg-bio-green px-4 py-2.5 text-sm font-bold text-white shadow-bio-btn transition-all hover:-translate-y-0.5 hover:bg-bio-green-hover"
+              >
+                <LayoutDashboard className="h-4 w-4" />
+                ห้องเรียน
+              </Link>
               <button
                 type="button"
                 onClick={handleSignOut}
-                className="bg-[#f5f7f5] text-[#20352a] hover:bg-bio-green-soft hover:text-bio-green rounded-[11px] px-[19px] py-[11px] font-bold text-sm transition-all"
+                disabled={isSigningOut}
+                aria-label="ออกจากระบบ"
+                title="ออกจากระบบ"
+                className="grid h-10 w-10 shrink-0 place-items-center rounded-xl text-bio-muted transition-colors hover:bg-rose-50 hover:text-rose-600 disabled:opacity-50"
               >
-                ออกจากระบบ
+                <LogOut className="h-4 w-4" />
               </button>
             </>
-          ) : authReady ? (
+          ) : (
             <>
               <Link
                 href="/login"
-                className="bg-[#f5f7f5] text-[#20352a] hover:bg-bio-green-soft hover:text-bio-green hover:-translate-y-0.5 rounded-[11px] px-[19px] py-[11px] font-bold text-sm transition-all"
+                className="rounded-xl px-4 py-2.5 text-sm font-bold text-[#304138] transition-colors hover:bg-bio-cream hover:text-bio-green"
               >
                 เข้าสู่ระบบ
               </Link>
               <Link
                 href="/register"
-                className="bg-bio-green text-white hover:bg-bio-green-hover shadow-bio-btn hover:-translate-y-0.5 rounded-[11px] px-[19px] py-[11px] font-bold text-sm transition-all"
+                className="inline-flex items-center gap-1.5 rounded-xl bg-bio-green px-4 py-2.5 text-sm font-bold text-white shadow-bio-btn transition-all hover:-translate-y-0.5 hover:bg-bio-green-hover"
               >
-                สมัครเรียน
+                สมัครสมาชิก
+                <ChevronRight className="h-4 w-4" />
               </Link>
             </>
-          ) : null}
+          )}
         </div>
 
-        {/* Mobile Hamburger Toggle */}
         <button
-          className="lg:hidden p-2 text-bio-ink bg-none border-0 ml-auto"
+          type="button"
+          className="ml-auto grid h-11 w-11 place-items-center rounded-xl border border-bio-line bg-white text-bio-ink transition-colors hover:bg-bio-cream lg:hidden"
           aria-expanded={mobileMenuOpen}
-          aria-label="เปิดเมนู"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          aria-controls="mobile-navigation"
+          aria-label={mobileMenuOpen ? "ปิดเมนู" : "เปิดเมนู"}
+          onClick={() => setMobileMenuOpen((open) => !open)}
         >
-          <div className="w-6 h-0.5 bg-[#173b28] my-[5px] transition-all"></div>
-          <div className="w-6 h-0.5 bg-[#173b28] my-[5px] transition-all"></div>
-          <div className="w-6 h-0.5 bg-[#173b28] my-[5px] transition-all"></div>
+          {mobileMenuOpen ? (
+            <X className="h-5 w-5" />
+          ) : (
+            <Menu className="h-5 w-5" />
+          )}
         </button>
       </div>
 
-      {/* Mobile Drawer Nav */}
       {mobileMenuOpen && (
-        <div className="lg:hidden absolute left-5 right-5 top-[76px] bg-white border border-bio-line rounded-2xl p-[18px] flex flex-col gap-3.5 shadow-bio animate-in fade-in slide-in-from-top-2 duration-200 z-50">
-          <nav className="flex flex-col gap-3">
-            {navLinks.map((link) => (
-              <Link
-                key={link.label}
-                href={link.href}
-                onClick={handleNavClick}
-                className="text-sm font-semibold text-[#304138] hover:text-bio-green py-1 transition-colors"
+        <>
+          <button
+            type="button"
+            className="fixed inset-0 top-[70px] z-40 bg-[#102619]/25 backdrop-blur-[2px] lg:hidden"
+            aria-label="ปิดเมนู"
+            onClick={() => setMobileMenuOpen(false)}
+          />
+          <div
+            id="mobile-navigation"
+            className="absolute left-0 right-0 top-[70px] z-50 border-b border-bio-line bg-white px-5 pb-6 pt-3 shadow-xl lg:hidden"
+          >
+            <div className="mx-auto max-w-[620px]">
+              {isAuthReady && user && (
+                <div className="mb-3 flex items-center gap-3 rounded-2xl bg-bio-cream/70 p-3.5">
+                  <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-bio-green text-white">
+                    <UserRound className="h-5 w-5" />
+                  </span>
+                  <div className="min-w-0">
+                    <p className="m-0 truncate text-sm font-extrabold text-bio-ink">
+                      {displayName}
+                    </p>
+                    <p className="m-0 truncate text-[11px] text-bio-muted">
+                      {user.email}
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              <nav
+                className="grid grid-cols-1 gap-1 sm:grid-cols-2"
+                aria-label="เมนูมือถือ"
               >
-                {link.label}
-              </Link>
-            ))}
-          </nav>
-          <div className="flex flex-col gap-2 pt-2 border-t border-bio-line">
-            {authReady && user ? (
-              <>
-                <span className="truncate text-center text-sm font-bold text-bio-ink">
-                  สวัสดี {displayName}
-                </span>
-                <button
-                  type="button"
-                  onClick={handleSignOut}
-                  className="w-full bg-[#f5f7f5] text-[#20352a] rounded-[11px] py-2.5 font-bold text-sm text-center"
-                >
-                  ออกจากระบบ
-                </button>
-              </>
-            ) : authReady ? (
-              <>
-                <Link
-                  href="/login"
-                  onClick={handleNavClick}
-                  className="w-full bg-[#f5f7f5] text-[#20352a] rounded-[11px] py-2.5 font-bold text-sm text-center"
-                >
-                  เข้าสู่ระบบ
-                </Link>
-                <Link
-                  href="/register"
-                  onClick={handleNavClick}
-                  className="w-full bg-bio-green text-white shadow-bio-btn rounded-[11px] py-2.5 font-bold text-sm text-center"
-                >
-                  สมัครเรียน
-                </Link>
-              </>
-            ) : null}
+                {navLinks.map((link) => {
+                  const active = isActive(link);
+                  return (
+                    <Link
+                      key={link.label}
+                      href={link.href}
+                      aria-current={active ? "page" : undefined}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className={`flex min-h-11 items-center justify-between rounded-xl px-3.5 py-2.5 text-sm font-bold transition-colors ${
+                        active
+                          ? "bg-bio-green-soft text-bio-green"
+                          : "text-[#304138] hover:bg-bio-cream"
+                      }`}
+                    >
+                      {link.label}
+                      <ChevronRight className="h-4 w-4 opacity-45" />
+                    </Link>
+                  );
+                })}
+              </nav>
+
+              <div className="mt-3 border-t border-bio-line pt-3">
+                {!isAuthReady ? (
+                  <div className="h-11 w-full animate-pulse rounded-xl bg-bio-cream" />
+                ) : user ? (
+                  <div className="space-y-2">
+                    {user.app_metadata?.role === "admin" && (
+                      <Link
+                        href="/admin"
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl border border-bio-green/20 bg-bio-green-soft px-4 text-sm font-bold text-bio-green"
+                      >
+                        <ShieldCheck className="h-4 w-4" />
+                        เปิดศูนย์จัดการ Admin
+                      </Link>
+                    )}
+                    <div className="grid grid-cols-[1fr_auto] gap-2">
+                      <Link
+                        href="/dashboard"
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-bio-green px-4 text-sm font-bold text-white shadow-bio-btn"
+                      >
+                        <BookOpen className="h-4 w-4" />
+                        ไปที่ห้องเรียนของฉัน
+                      </Link>
+                      <button
+                        type="button"
+                        onClick={handleSignOut}
+                        disabled={isSigningOut}
+                        className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl border border-rose-200 px-4 text-sm font-bold text-rose-600 disabled:opacity-50"
+                      >
+                        <LogOut className="h-4 w-4" />
+                        ออก
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-2 gap-2">
+                    <Link
+                      href="/login"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="inline-flex min-h-11 items-center justify-center rounded-xl border border-bio-line text-sm font-bold text-bio-ink"
+                    >
+                      เข้าสู่ระบบ
+                    </Link>
+                    <Link
+                      href="/register"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="inline-flex min-h-11 items-center justify-center rounded-xl bg-bio-green text-sm font-bold text-white shadow-bio-btn"
+                    >
+                      สมัครสมาชิก
+                    </Link>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
-        </div>
+        </>
       )}
     </header>
   );
-};
+}

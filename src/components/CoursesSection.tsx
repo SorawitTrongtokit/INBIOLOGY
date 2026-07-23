@@ -1,12 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
-import { COURSES_DATA } from "@/data/mockData";
 import { CourseCategory } from "@/types";
+import { useCourses } from "@/hooks/useCatalog";
 import { CourseCard } from "./CourseCard";
 import { ScrollReveal } from "./ScrollReveal";
 
 export const CoursesSection: React.FC = () => {
+  const { data: courses, isLoading, error } = useCourses();
   const [activeFilter, setActiveFilter] = useState<"all" | CourseCategory>("all");
   const [showAll, setShowAll] = useState(false);
 
@@ -18,7 +19,7 @@ export const CoursesSection: React.FC = () => {
   ];
 
   // Filter logic matching original script
-  const filteredCourses = COURSES_DATA.filter((course) => {
+  const filteredCourses = courses.filter((course) => {
     if (course.isExtra && !showAll) return false;
     if (activeFilter === "all") return true;
     return course.category === activeFilter;
@@ -63,11 +64,24 @@ export const CoursesSection: React.FC = () => {
         </ScrollReveal>
 
         {/* Course Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-          {filteredCourses.map((course) => (
-            <CourseCard key={course.id} course={course} />
-          ))}
-        </div>
+        {error ? (
+          <p className="rounded-2xl border border-red-200 bg-red-50 p-5 text-sm font-semibold text-red-700">
+            โหลดคอร์สเรียนไม่สำเร็จ กรุณาลองใหม่อีกครั้ง
+          </p>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+            {isLoading
+              ? Array.from({ length: 4 }).map((_, index) => (
+                  <div
+                    key={index}
+                    className="h-[420px] animate-pulse rounded-[18px] border border-bio-line bg-white"
+                  />
+                ))
+              : filteredCourses.map((course) => (
+                  <CourseCard key={course.id} course={course} />
+                ))}
+          </div>
+        )}
       </div>
     </section>
   );

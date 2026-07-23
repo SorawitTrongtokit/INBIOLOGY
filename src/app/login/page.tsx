@@ -49,7 +49,12 @@ export default function LoginPage() {
       return;
     }
 
-    router.replace("/");
+    const requestedPath = new URLSearchParams(window.location.search).get("next");
+    const nextPath =
+      requestedPath?.startsWith("/") && !requestedPath.startsWith("//")
+        ? requestedPath
+        : "/";
+    router.replace(nextPath);
     router.refresh();
   };
 

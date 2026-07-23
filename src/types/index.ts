@@ -5,6 +5,7 @@ export interface Lesson {
   id: string;
   title: string;
   duration: string;
+  durationSeconds?: number;
   isFreePreview?: boolean;
 }
 

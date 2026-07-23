@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { CourseCard } from "@/components/CourseCard";
-import { COURSES_DATA } from "@/data/mockData";
+import { useCourses } from "@/hooks/useCatalog";
 import { CourseCategory, GradeLevel } from "@/types";
 import { Search, SlidersHorizontal, BookOpen, Sparkles } from "lucide-react";
 import { ScrollReveal } from "@/components/ScrollReveal";
@@ -12,6 +12,7 @@ import { ScrollReveal } from "@/components/ScrollReveal";
 type FilterGrade = "all" | GradeLevel | CourseCategory;
 
 export default function CoursesPage() {
+  const { data: courses, isLoading, error } = useCourses();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedGrade, setSelectedGrade] = useState<FilterGrade>("all");
   const [sortBy, setSortBy] = useState<"popular" | "price-asc" | "price-desc">("popular");
@@ -26,7 +27,7 @@ export default function CoursesPage() {
   ];
 
   // Filtering & Sorting logic
-  const filteredCourses = COURSES_DATA.filter((course) => {
+  const filteredCourses = courses.filter((course) => {
     // Grade & Category filter
     const matchesFilter =
       selectedGrade === "all" ||
@@ -140,7 +141,20 @@ export default function CoursesPage() {
               </h2>
             </div>
 
-            {filteredCourses.length > 0 ? (
+            {error ? (
+              <div className="rounded-2xl border border-red-200 bg-red-50 p-8 text-center text-sm font-semibold text-red-700">
+                โหลดคอร์สเรียนไม่สำเร็จ กรุณารีเฟรชหน้าแล้วลองใหม่
+              </div>
+            ) : isLoading ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {Array.from({ length: 6 }).map((_, index) => (
+                  <div
+                    key={index}
+                    className="h-[420px] animate-pulse rounded-[18px] border border-bio-line bg-white"
+                  />
+                ))}
+              </div>
+            ) : filteredCourses.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredCourses.map((course) => (
                   <CourseCard key={course.id} course={course} />

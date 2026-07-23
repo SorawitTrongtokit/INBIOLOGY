@@ -1,9 +1,12 @@
+"use client";
+
 import React from "react";
-import { ARTICLES_DATA } from "@/data/mockData";
+import { useArticles } from "@/hooks/useCatalog";
 import { ScrollReveal } from "./ScrollReveal";
 import { Dna, HeartPulse, Leaf, ArrowRight } from "lucide-react";
 
 export const ArticlesSection: React.FC = () => {
+  const { data: articles, isLoading, error } = useArticles();
   const getArticleIcon = (iconName: string) => {
     switch (iconName) {
       case "dna":
@@ -29,8 +32,20 @@ export const ArticlesSection: React.FC = () => {
           </h2>
         </ScrollReveal>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          {ARTICLES_DATA.map((article) => (
+        {error ? (
+          <p className="rounded-2xl border border-red-200 bg-red-50 p-5 text-sm font-semibold text-red-700">
+            โหลดบทความไม่สำเร็จ กรุณาลองใหม่อีกครั้ง
+          </p>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          {isLoading
+            ? Array.from({ length: 3 }).map((_, index) => (
+                <div
+                  key={index}
+                  className="h-40 animate-pulse rounded-[16px] border border-bio-line bg-white"
+                />
+              ))
+            : articles.map((article) => (
             <ScrollReveal key={article.id}>
               <article className="flex gap-[18px] p-6 bg-white border border-bio-line rounded-[16px] items-start hover:border-bio-green/40 hover:shadow-sm transition-all h-full">
                 <div className="w-12 h-12 rounded-xl bg-bio-green-soft flex items-center justify-center shrink-0">
@@ -55,7 +70,8 @@ export const ArticlesSection: React.FC = () => {
               </article>
             </ScrollReveal>
           ))}
-        </div>
+          </div>
+        )}
       </div>
     </section>
   );
