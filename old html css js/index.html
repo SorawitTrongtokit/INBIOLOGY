@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="inbio เว็บไซต์เรียนชีววิทยาออนไลน์สำหรับนักเรียนมัธยม" />
+  <title>inbio — เรียนชีวะ เข้าใจง่าย เก่งได้จริง</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a class="brand" href="#top" aria-label="inbio home">
+        <span class="brand-leaf">●</span>inbio
+      </a>
+
+      <button class="menu-toggle" aria-expanded="false" aria-label="เปิดเมนู">
+        <span></span><span></span><span></span>
+      </button>
+
+      <nav class="main-nav">
+        <a href="#top">หน้าหลัก</a>
+        <a href="#courses">คอร์สเรียน</a>
+        <a href="#about">เกี่ยวกับเรา</a>
+        <a href="#reviews">รีวิว</a>
+        <a href="#articles">บทความ</a>
+        <a href="#contact">ติดต่อเรา</a>
+      </nav>
+
+      <div class="nav-actions">
+        <button class="btn btn-ghost">เข้าสู่ระบบ</button>
+        <button class="btn btn-primary">สมัครเรียน</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-copy reveal">
+          <span class="eyebrow">BIOLOGY LEARNING PLATFORM</span>
+          <h1><span>inbio</span><br>เรียนชีวะ เข้าใจง่าย <em>เก่งได้จริง</em></h1>
+          <p>
+            สรุปให้เข้าใจ กระชับ เชื่อมโยงทุกเรื่องชีวะ
+            ตั้งแต่พื้นฐานจนถึงข้อสอบ ม.ปลาย และ TCAS
+          </p>
+          <div class="hero-actions">
+            <a class="btn btn-primary btn-lg" href="#courses">ดูคอร์สเรียนทั้งหมด</a>
+            <button class="btn btn-light btn-lg" id="previewBtn">▶ ดูตัวอย่างคอร์ส</button>
+          </div>
+          <div class="hero-points">
+            <div><b>✓</b><span><strong>เนื้อหาคุณภาพ</strong><small>โดยติวเตอร์ชีวะมืออาชีพ</small></span></div>
+            <div><b>✓</b><span><strong>อัปเดตเนื้อหา</strong><small>ตรงตามหลักสูตรล่าสุด</small></span></div>
+            <div><b>✓</b><span><strong>เรียนได้ทุกที่</strong><small>มือถือ แท็บเล็ต คอม</small></span></div>
+          </div>
+        </div>
+
+        <div class="hero-visual reveal">
+          <div class="dna dna-one"></div>
+          <div class="dna dna-two"></div>
+          <div class="science-card microscope-card">
+            <div class="microscope">
+              <div class="scope-arm"></div>
+              <div class="scope-lens"></div>
+              <div class="scope-stage"></div>
+              <div class="scope-base"></div>
+            </div>
+          </div>
+          <div class="leaf leaf-a"></div>
+          <div class="leaf leaf-b"></div>
+          <div class="leaf leaf-c"></div>
+          <div class="book-stack">
+            <div>BIOLOGY</div>
+            <div>GENETICS</div>
+            <div>ECOLOGY</div>
+          </div>
+          <div class="floating-badge badge-a">🧬 พันธุศาสตร์</div>
+          <div class="floating-badge badge-b">🔬 เซลล์และจุลชีพ</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="benefits-wrap">
+      <div class="container benefits">
+        <article><span>📖</span><h3>สรุปเนื้อหาเข้าใจง่าย</h3><p>สรุปเป็นแผนภาพ จำง่าย</p></article>
+        <article><span>📝</span><h3>แนวข้อสอบจัดเต็ม</h3><p>ข้อสอบเก่า + ข้อสอบอัปเดต</p></article>
+        <article><span>🎬</span><h3>คลิปวิดีโอคุณภาพ</h3><p>อธิบายละเอียดทุกบท</p></article>
+        <article><span>💬</span><h3>ถาม-ตอบได้ตลอด</h3><p>ทีมติวเตอร์คอยช่วย</p></article>
+        <article><span>📈</span><h3>ติดตามผลการเรียน</h3><p>วิเคราะห์จุดแข็ง-จุดอ่อน</p></article>
+      </div>
+    </section>
+
+    <section class="section" id="courses">
+      <div class="container">
+        <div class="section-head reveal">
+          <div>
+            <span class="eyebrow">POPULAR COURSES</span>
+            <h2>คอร์สเรียนแนะนำ</h2>
+          </div>
+          <button class="text-link" id="showAllBtn">ดูคอร์สทั้งหมด →</button>
+        </div>
+
+        <div class="course-filters reveal">
+          <button class="filter active" data-filter="all">ทั้งหมด</button>
+          <button class="filter" data-filter="basic">พื้นฐาน</button>
+          <button class="filter" data-filter="exam">สอบเข้า</button>
+          <button class="filter" data-filter="deep">เจาะลึก</button>
+        </div>
+
+        <div class="course-grid" id="courseGrid">
+          <article class="course-card reveal" data-category="basic">
+            <div class="course-cover cover-cell">
+              <span class="tag">พื้นฐาน</span>
+              <div class="cell-illustration"></div>
+              <h3>ชีววิทยาพื้นฐาน ม.ปลาย</h3>
+            </div>
+            <div class="course-body">
+              <h3>ปูพื้นฐานชีวะ ม.ปลาย</h3>
+              <p>เหมาะสำหรับ ม.4 ที่ต้องการพื้นฐานแน่น</p>
+              <div class="course-meta"><span>▣ 45 บทเรียน</span><b>890 บาท</b></div>
+            </div>
+          </article>
+
+          <article class="course-card reveal" data-category="exam">
+            <div class="course-cover cover-dna">
+              <span class="tag">ยอดนิยม</span>
+              <div class="dna-art"></div>
+              <h3>ตะลุยโจทย์ชีวะ ม.ปลาย</h3>
+            </div>
+            <div class="course-body">
+              <h3>ตะลุยโจทย์ชีวะ ม.ปลาย</h3>
+              <p>รวมข้อสอบเก่าและโจทย์สำคัญ</p>
+              <div class="course-meta"><span>▣ 60 บทเรียน</span><b>990 บาท</b></div>
+            </div>
+          </article>
+
+          <article class="course-card reveal" data-category="deep">
+            <div class="course-cover cover-genetic">
+              <span class="tag">เจาะลึก</span>
+              <div class="plant-art">🌿</div>
+              <h3>เจาะลึกพันธุศาสตร์</h3>
+            </div>
+            <div class="course-body">
+              <h3>เจาะลึกพันธุศาสตร์</h3>
+              <p>เข้าใจพันธุกรรมและประยุกต์โจทย์ยาก</p>
+              <div class="course-meta"><span>▣ 32 บทเรียน</span><b>790 บาท</b></div>
+            </div>
+          </article>
+
+          <article class="course-card reveal" data-category="basic">
+            <div class="course-cover cover-body">
+              <span class="tag">แนะนำ</span>
+              <div class="heart-art">♥</div>
+              <h3>ระบบต่าง ๆ ในร่างกาย</h3>
+            </div>
+            <div class="course-body">
+              <h3>ระบบต่าง ๆ ในร่างกาย</h3>
+              <p>สรุประบบร่างกายแบบเห็นภาพรวม</p>
+              <div class="course-meta"><span>▣ 40 บทเรียน</span><b>890 บาท</b></div>
+            </div>
+          </article>
+
+          <article class="course-card hidden extra-course" data-category="exam">
+            <div class="course-cover cover-ecology"><span class="tag">ใหม่</span><div class="plant-art">🌱</div><h3>Ecology & Evolution</h3></div>
+            <div class="course-body"><h3>นิเวศวิทยาและวิวัฒนาการ</h3><p>สรุปครบพร้อมโจทย์ประยุกต์</p><div class="course-meta"><span>▣ 38 บทเรียน</span><b>850 บาท</b></div></div>
+          </article>
+
+          <article class="course-card hidden extra-course" data-category="deep">
+            <div class="course-cover cover-micro"><span class="tag">Advanced</span><div class="cell-illustration"></div><h3>Cell Biology</h3></div>
+            <div class="course-body"><h3>ชีววิทยาระดับเซลล์</h3><p>ลงลึกโครงสร้างและกลไกของเซลล์</p><div class="course-meta"><span>▣ 50 บทเรียน</span><b>1,090 บาท</b></div></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section about" id="about">
+      <div class="container about-grid">
+        <div class="about-copy reveal">
+          <span class="eyebrow">WHY INBIO</span>
+          <h2>เราไม่ได้สอนแค่ให้จำ<br>แต่สอนให้เข้าใจ</h2>
+          <p>เราเชื่อว่าชีวะไม่ใช่เรื่องยาก ถ้าเราเข้าใจธรรมชาติของมันอย่างแท้จริง</p>
+          <a class="btn btn-primary" href="#contact">เกี่ยวกับเรา</a>
+        </div>
+
+        <div class="stats reveal">
+          <div><strong>5,000+</strong><span>นักเรียนที่ไว้ใจ</span></div>
+          <div><strong>200+</strong><span>บทเรียนคุณภาพ</span></div>
+          <div><strong>98%</strong><span>ความพึงพอใจ</span></div>
+          <div><strong>24/7</strong><span>เข้าถึงบทเรียน</span></div>
+        </div>
+
+        <div class="tablet reveal">
+          <div class="tablet-screen">
+            <span class="mini-brand">inbio</span>
+            <div class="mini-cell"></div>
+            <div class="progress-line"><i></i></div>
+            <small>Cell Structure — 72%</small>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section reviews" id="reviews">
+      <div class="container">
+        <div class="section-head center reveal">
+          <div><span class="eyebrow">STUDENT REVIEWS</span><h2>เสียงจากนักเรียน</h2></div>
+        </div>
+        <div class="review-grid">
+          <article class="review-card reveal"><p>“เรียนกับ inbio แล้วเข้าใจชีวะมากขึ้น สรุปเนื้อหาเป็นภาพ ทำโจทย์ได้ไวกว่าเดิม”</p><div><span class="avatar">พ</span><b>น้องพิม</b><small>ม.5 โรงเรียนสวนกุหลาบ</small></div></article>
+          <article class="review-card reveal"><p>“ติวเตอร์อธิบายละเอียด เข้าใจง่าย มีเทคนิคจำข้อสอบที่ใช้ได้จริง”</p><div><span class="avatar">ท</span><b>น้องทาย</b><small>ม.6 เตรียมอุดมศึกษา</small></div></article>
+          <article class="review-card reveal"><p>“จากคนไม่ชอบชีวะ กลายเป็นชอบเลยครับ เพราะเรียนแล้วเห็นภาพและสนุกมาก”</p><div><span class="avatar">ม</span><b>น้องเมฆ</b><small>ม.4 โรงเรียนมหิดลวิทยานุสรณ์</small></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section articles" id="articles">
+      <div class="container">
+        <div class="section-head reveal">
+          <div><span class="eyebrow">BIOLOGY BLOG</span><h2>บทความล่าสุด</h2></div>
+        </div>
+        <div class="article-grid">
+          <article><span>🧬</span><div><small>พันธุศาสตร์</small><h3>DNA replication จำอย่างไรให้ไม่สับสน</h3><a href="#">อ่านต่อ →</a></div></article>
+          <article><span>🫀</span><div><small>สรีรวิทยา</small><h3>สรุประบบไหลเวียนเลือดใน 10 นาที</h3><a href="#">อ่านต่อ →</a></div></article>
+          <article><span>🌿</span><div><small>พืช</small><h3>Photosynthesis ตั้งแต่พื้นฐานถึงข้อสอบ</h3><a href="#">อ่านต่อ →</a></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta-section">
+      <div class="container cta-card reveal">
+        <div>
+          <span class="eyebrow">START LEARNING TODAY</span>
+          <h2>พร้อมเก่งชีวะไปด้วยกันหรือยัง?</h2>
+          <p>เริ่มเรียนฟรี พร้อมบททดลองและแบบทดสอบวัดระดับ</p>
+        </div>
+        <button class="btn btn-light btn-lg">สมัครเรียนฟรี</button>
+      </div>
+    </section>
+  </main>
+
+  <footer id="contact">
+    <div class="container footer-grid">
+      <div>
+        <a class="brand" href="#top"><span class="brand-leaf">●</span>inbio</a>
+        <p>สถาบันเรียนพิเศษออนไลน์<br>ที่เน้นคุณภาพ เข้าใจง่าย และใส่ใจนักเรียน</p>
+      </div>
+      <div><h4>เมนู</h4><a href="#top">หน้าหลัก</a><a href="#courses">คอร์สเรียน</a><a href="#about">เกี่ยวกับเรา</a><a href="#articles">บทความ</a></div>
+      <div><h4>ช่วยเหลือ</h4><a href="#">คำถามที่พบบ่อย</a><a href="#">วิธีการสมัครเรียน</a><a href="#">วิธีการชำระเงิน</a><a href="#">นโยบายการคืนเงิน</a></div>
+      <div><h4>ติดต่อเรา</h4><p>LINE: @inbio<br>Email: info@inbio.co.th<br>โทร: 099-123-4567<br>จันทร์–ศุกร์ 9:00–18:00</p></div>
+    </div>
+    <div class="container copyright">© 2026 inbio. All rights reserved.</div>
+  </footer>
+
+  <div class="modal" id="courseModal" aria-hidden="true">
+    <div class="modal-backdrop"></div>
+    <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <button class="modal-close" aria-label="ปิด">×</button>
+      <div class="video-placeholder">▶</div>
+      <h2 id="modalTitle">ตัวอย่างคอร์ส inbio</h2>
+      <p>บททดลอง: โครงสร้างเซลล์และหน้าที่ของออร์แกเนลล์</p>
+      <button class="btn btn-primary">เริ่มเรียนบททดลอง</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

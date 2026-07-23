@@ -1,0 +1,33 @@
+import type { Metadata } from "next";
+import { Noto_Sans_Thai } from "next/font/google";
+import "./globals.css";
+
+const notoSansThai = Noto_Sans_Thai({
+  variable: "--font-noto-sans-thai",
+  subsets: ["thai", "latin"],
+  weight: ["400", "500", "600", "700", "800"],
+});
+
+export const metadata: Metadata = {
+  title: "inbio — เรียนชีวะ เข้าใจง่าย เก่งได้จริง",
+  description: "inbio เว็บไซต์เรียนชีววิทยาออนไลน์สำหรับนักเรียนมัธยม",
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html
+      lang="th"
+      className={notoSansThai.variable}
+      data-scroll-behavior="smooth"
+      suppressHydrationWarning
+    >
+      <body className="font-sans antialiased" suppressHydrationWarning>
+        {children}
+      </body>
+    </html>
+  );
+}

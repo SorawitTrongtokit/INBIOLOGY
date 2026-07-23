@@ -1,0 +1,193 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply text-bio-ink bg-white font-sans antialiased leading-relaxed;
+  }
+}
+
+/* Custom visual elements from original design */
+.hero-visual-bg {
+  background: radial-gradient(circle at 84% 35%, rgba(149, 194, 119, 0.22), transparent 25%),
+    linear-gradient(115deg, #fbfcf8 0%, #f1f7ec 100%);
+}
+
+.science-card {
+  border-radius: 46% 54% 48% 52%;
+  background: linear-gradient(145deg, #dfeecd, #f6f9ed);
+  box-shadow: inset 0 0 60px rgba(255, 255, 255, 0.7);
+}
+
+/* Microscope graphic elements */
+.microscope {
+  position: absolute;
+  width: 220px;
+  height: 330px;
+  left: 50%;
+  top: 49%;
+  transform: translate(-50%, -50%);
+}
+.scope-arm {
+  position: absolute;
+  width: 62px;
+  height: 170px;
+  border: 20px solid #193126;
+  border-left: 0;
+  border-bottom: 0;
+  border-radius: 0 80px 0 0;
+  left: 85px;
+  top: 25px;
+  transform: rotate(17deg);
+}
+.scope-lens {
+  position: absolute;
+  width: 54px;
+  height: 145px;
+  background: linear-gradient(90deg, #f7f8f2, #a9b5ac);
+  border: 8px solid #23332b;
+  border-radius: 20px;
+  left: 124px;
+  top: 5px;
+  transform: rotate(27deg);
+}
+.scope-stage {
+  position: absolute;
+  width: 155px;
+  height: 22px;
+  background: #1c2c24;
+  border-radius: 6px;
+  left: 33px;
+  top: 193px;
+  transform: rotate(4deg);
+}
+.scope-base {
+  position: absolute;
+  width: 190px;
+  height: 45px;
+  background: linear-gradient(#e5e9e5, #9eaaa2);
+  border: 8px solid #26352d;
+  border-radius: 45px 45px 12px 12px;
+  left: 18px;
+  bottom: 16px;
+}
+
+/* Leaf graphics */
+.leaf {
+  position: absolute;
+  width: 90px;
+  height: 150px;
+  background: linear-gradient(135deg, #8db653, #377b35);
+  border-radius: 100% 0 100% 0;
+  box-shadow: inset -10px -10px 20px rgba(0, 0, 0, 0.13);
+}
+.leaf::after {
+  content: "";
+  position: absolute;
+  width: 2px;
+  height: 120px;
+  background: rgba(255, 255, 255, 0.45);
+  transform: rotate(42deg);
+  left: 48px;
+  top: 18px;
+}
+.leaf-a {
+  left: 26px;
+  top: 87px;
+  transform: rotate(-30deg);
+}
+.leaf-b {
+  left: 78px;
+  top: 28px;
+  transform: rotate(15deg) scale(0.82);
+}
+.leaf-c {
+  right: 18px;
+  bottom: 5px;
+  transform: rotate(40deg) scale(0.75);
+}
+
+/* DNA backgrounds */
+.dna {
+  position: absolute;
+  width: 160px;
+  height: 260px;
+  opacity: 0.12;
+  background: repeating-linear-gradient(
+    65deg,
+    transparent 0 12px,
+    #0b6b3a 13px 15px,
+    transparent 16px 28px
+  );
+  border-radius: 50%;
+}
+.dna-one {
+  right: -30px;
+  top: -70px;
+  transform: rotate(22deg);
+}
+.dna-two {
+  left: 120px;
+  bottom: -100px;
+  transform: rotate(-20deg);
+}
+
+/* Course art illustrations */
+.cell-illustration {
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  border: 8px solid rgba(255, 255, 255, 0.35);
+  border-radius: 50%;
+  right: -10px;
+  top: 48px;
+}
+.cell-illustration::before,
+.cell-illustration::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.32);
+}
+.cell-illustration::before {
+  width: 32px;
+  height: 32px;
+  left: 35px;
+  top: 30px;
+}
+.cell-illustration::after {
+  width: 18px;
+  height: 18px;
+  right: 20px;
+  bottom: 24px;
+}
+
+.dna-art {
+  position: absolute;
+  right: -10px;
+  top: 30px;
+  width: 120px;
+  height: 160px;
+  background: repeating-linear-gradient(
+    55deg,
+    transparent 0 10px,
+    rgba(255, 255, 255, 0.38) 11px 13px,
+    transparent 14px 25px
+  );
+  border-radius: 50%;
+}
+
+/* Scroll reveal helper */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: all 0.7s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
