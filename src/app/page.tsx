@@ -1,8 +1,6 @@
-"use client";
-
-import React, { useState } from "react";
+import React from "react";
 import { Header } from "@/components/Header";
-import { HeroSection } from "@/components/HeroSection";
+import { HomeHero } from "@/components/HomeHero";
 import { BenefitsSection } from "@/components/BenefitsSection";
 import { CoursesSection } from "@/components/CoursesSection";
 import { AboutSection } from "@/components/AboutSection";
@@ -10,16 +8,17 @@ import { ReviewsSection } from "@/components/ReviewsSection";
 import { ArticlesSection } from "@/components/ArticlesSection";
 import { CtaSection } from "@/components/CtaSection";
 import { Footer } from "@/components/Footer";
-import { PreviewModal } from "@/components/PreviewModal";
+import { createClient } from "@/lib/supabase/server";
 
-export default function HomePage() {
-  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+export default async function HomePage() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
 
   return (
     <div className="min-h-screen flex flex-col bg-white text-bio-ink" id="top">
-      <Header />
+      <Header initialUser={user} />
       <main className="flex-grow">
-        <HeroSection onOpenPreview={() => setIsPreviewOpen(true)} />
+        <HomeHero />
         <BenefitsSection />
         <CoursesSection />
         <AboutSection />
@@ -28,10 +27,6 @@ export default function HomePage() {
         <CtaSection />
       </main>
       <Footer />
-      <PreviewModal
-        isOpen={isPreviewOpen}
-        onClose={() => setIsPreviewOpen(false)}
-      />
     </div>
   );
 }

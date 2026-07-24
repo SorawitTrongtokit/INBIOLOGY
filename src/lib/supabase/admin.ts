@@ -1,4 +1,5 @@
 import { createClient } from "./client";
+import { invalidateCatalog } from "./catalog";
 
 export type AdminCourse = {
   id: number;
@@ -164,20 +165,24 @@ export class AdminAccessError extends Error {
 
 async function ensureAdmin() {
   const supabase = createClient();
-  const sessionResult = await supabase.auth.getSession();
-  if (!sessionResult.data.session) {
-    throw new AdminAccessError("กรุณาเข้าสู่ระบบด้วยบัญชีแอดมิน");
-  }
 
-  if (sessionResult.data.session.user.app_metadata?.role !== "admin") {
-    const refreshResult = await supabase.auth.refreshSession();
-    if (refreshResult.error) throw refreshResult.error;
-  }
-
-  const userResult = await supabase.auth.getUser();
+  // getUser() verifies the JWT server-side — unlike getSession() which only reads local storage
+  let userResult = await supabase.auth.getUser();
   if (userResult.error || !userResult.data.user) {
     throw new AdminAccessError("กรุณาเข้าสู่ระบบด้วยบัญชีแอดมิน");
   }
+
+  // If role claim is missing (stale JWT), attempt a token refresh and re-check
+  if (userResult.data.user.app_metadata?.role !== "admin") {
+    const refreshResult = await supabase.auth.refreshSession();
+    if (refreshResult.error) throw refreshResult.error;
+
+    userResult = await supabase.auth.getUser();
+    if (userResult.error || !userResult.data.user) {
+      throw new AdminAccessError("กรุณาเข้าสู่ระบบด้วยบัญชีแอดมิน");
+    }
+  }
+
   if (userResult.data.user.app_metadata?.role !== "admin") {
     throw new AdminAccessError();
   }
@@ -282,6 +287,7 @@ export async function saveCourse(input: CourseInput, id?: number) {
     : createClient().from("courses").insert(payload);
   const { error } = await query;
   if (error) throw error;
+  invalidateCatalog();
 }
 
 export async function saveInstructor(
@@ -488,4 +494,5 @@ export async function saveArticle(
     : createClient().from("articles").insert(payload);
   const { error } = await query;
   if (error) throw error;
+  invalidateCatalog();
 }

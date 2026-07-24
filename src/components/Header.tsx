@@ -22,12 +22,12 @@ type NavLink = {
   section?: string;
 };
 
-export function Header() {
+export function Header({ initialUser }: { initialUser?: User | null }) {
   const pathname = usePathname();
   const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
-  const [isAuthReady, setIsAuthReady] = useState(false);
+  const [user, setUser] = useState<User | null>(initialUser ?? null);
+  const [isAuthReady, setIsAuthReady] = useState(initialUser !== undefined);
   const [isSigningOut, setIsSigningOut] = useState(false);
   const isHomePage = pathname === "/";
 

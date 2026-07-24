@@ -61,9 +61,13 @@ type LessonRow = {
 
 type ArticleRow = {
   id: number;
+  slug: string;
   icon: string;
   category: string;
   title: string;
+  excerpt: string;
+  content: string;
+  published_at: string | null;
 };
 
 type ReviewRow = {
@@ -75,8 +79,17 @@ type ReviewRow = {
 const COURSE_COLUMNS =
   "id,instructor_id,code,title,subtitle,description,category,grade_level,price,original_price,tag,cover_class,art_type,highlights,duration_minutes,is_extra,is_popular,rating_average,reviews_count,students_count";
 
-let coursesRequest: Promise<Course[]> | undefined;
-let articlesRequest: Promise<Article[]> | undefined;
+const CACHE_TTL_MS = 5 * 60 * 1_000; // 5 minutes
+
+type CacheEntry<T> = { promise: Promise<T>; cachedAt: number };
+let coursesCache: CacheEntry<Course[]> | undefined;
+let articlesCache: CacheEntry<Article[]> | undefined;
+
+/** Call this after any admin mutation so the next request re-fetches fresh data. */
+export function invalidateCatalog() {
+  coursesCache = undefined;
+  articlesCache = undefined;
+}
 
 function formatMinutes(minutes: number) {
   if (minutes < 60) return `${minutes} นาที`;
@@ -223,37 +236,54 @@ async function loadCourses() {
 }
 
 export function getCourses() {
-  coursesRequest ??= loadCourses().catch((error) => {
-    coursesRequest = undefined;
-    throw error;
-  });
-  return coursesRequest;
+  const now = Date.now();
+  if (!coursesCache || now - coursesCache.cachedAt > CACHE_TTL_MS) {
+    coursesCache = {
+      promise: loadCourses().catch((error) => {
+        coursesCache = undefined;
+        throw error;
+      }),
+      cachedAt: now,
+    };
+  }
+  return coursesCache.promise;
 }
 
 async function loadArticles() {
   const { data, error } = await createPublicClient()
     .from("articles")
-    .select("id,icon,category,title")
+    .select("id,slug,icon,category,title,excerpt,content,published_at")
     .eq("status", "published")
     .order("published_at", { ascending: false });
 
   if (error) throw error;
 
   return ((data ?? []) as ArticleRow[]).map((row) => ({
-    id: row.id.toString(),
+    // Use slug as the frontend id so URL-based lookup (`a.id === slug`) works
+    id: row.slug,
+    slug: row.slug,
     icon: row.icon,
     category: row.category,
     title: row.title,
-    link: "#articles",
+    link: `/articles/${row.slug}`,
+    excerpt: row.excerpt,
+    content: row.content,
+    publishedAt: row.published_at ?? undefined,
   }));
 }
 
 export function getArticles() {
-  articlesRequest ??= loadArticles().catch((error) => {
-    articlesRequest = undefined;
-    throw error;
-  });
-  return articlesRequest;
+  const now = Date.now();
+  if (!articlesCache || now - articlesCache.cachedAt > CACHE_TTL_MS) {
+    articlesCache = {
+      promise: loadArticles().catch((error) => {
+        articlesCache = undefined;
+        throw error;
+      }),
+      cachedAt: now,
+    };
+  }
+  return articlesCache.promise;
 }
 
 export async function getCourseWithReviews(code: string) {

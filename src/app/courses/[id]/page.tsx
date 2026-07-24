@@ -36,6 +36,7 @@ export default function CourseDetailPage({ params }: CourseDetailPageProps) {
 
   const [activeTab, setActiveTab] = useState<"overview" | "syllabus" | "tutor" | "reviews">("overview");
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [showContact, setShowContact] = useState(false);
 
   const handleOpenPreview = () => {
     setIsPreviewOpen(true);
@@ -360,11 +361,28 @@ export default function CourseDetailPage({ params }: CourseDetailPageProps) {
                 {/* CTA Enrollment Buttons */}
                 <div className="space-y-2.5">
                   <button
-                    onClick={() => alert(`ขอบคุณที่สนใจสมัครเรียนคอร์ส ${course.title}!`)}
+                    onClick={() => setShowContact(true)}
                     className="w-full bg-bio-green text-white hover:bg-bio-green-hover shadow-bio-btn rounded-xl py-3.5 font-bold text-base transition-all text-center"
                   >
                     สมัครเรียนคอร์สนี้ทันที
                   </button>
+
+                  {showContact && (
+                    <div className="rounded-xl border border-bio-green/40 bg-bio-green-soft p-4 space-y-2 animate-in fade-in duration-200">
+                      <p className="text-xs font-extrabold text-bio-green">💬 ติดต่อสมัครเรียนได้เลย!</p>
+                      <p className="text-xs text-bio-ink leading-relaxed">
+                        LINE OA: <strong>@inbio</strong><br />
+                        หรืออีเมล: <strong>hello@inbio.ac.th</strong>
+                      </p>
+                      <button
+                        onClick={() => setShowContact(false)}
+                        className="text-[11px] text-bio-muted hover:text-bio-ink font-semibold"
+                      >
+                        × ปิด
+                      </button>
+                    </div>
+                  )}
+
                   <button
                     onClick={handleOpenPreview}
                     className="w-full bg-bio-cream text-bio-ink hover:bg-bio-green-soft rounded-xl py-3 font-bold text-xs transition-colors flex items-center justify-center gap-1.5"

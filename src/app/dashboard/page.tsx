@@ -26,6 +26,7 @@ export default function StudentDashboardPage() {
   const [data, setData] = useState<StudentDashboardData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
+  const [pdfToast, setPdfToast] = useState(false);
 
   useEffect(() => {
     getStudentDashboard()
@@ -284,11 +285,19 @@ export default function StudentDashboardPage() {
                     <h4 className="text-sm font-bold text-bio-ink m-0">ชีทสรุปภาพรวม ม.ปลาย</h4>
                     <p className="text-xs text-bio-muted m-0 mt-0.5 mb-2">ไฟล์ PDF สรุปชีววิทยา 4 สี พิมพ์ได้</p>
                     <button
-                      onClick={() => alert("เริ่มดาวน์โหลดไฟล์ PDF สรุปชีววิทยา...")}
+                      onClick={() => {
+                        setPdfToast(true);
+                        setTimeout(() => setPdfToast(false), 3000);
+                      }}
                       className="text-xs font-bold text-bio-green hover:underline"
                     >
                       ⬇️ ดาวน์โหลด PDF
                     </button>
+                    {pdfToast && (
+                      <p className="text-[11px] text-amber-600 font-semibold mt-1.5">
+                        🔔 ฟีเจอร์นี้จะพร้อมใช้งานเร็วๆ นี้!
+                      </p>
+                    )}
                   </div>
                 </div>
 

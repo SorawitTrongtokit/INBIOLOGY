@@ -66,10 +66,16 @@ export interface Review {
 
 export interface Article {
   id: string;
+  slug: string;
   icon: string;
   category: string;
   title: string;
   link: string;
+  excerpt: string;
+  content?: string;
+  readTime?: string;
+  publishedAt?: string;
+  author?: string;
 }
 
 export interface StatItem {

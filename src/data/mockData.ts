@@ -335,23 +335,30 @@ export const REVIEWS_DATA: Review[] = [
 export const ARTICLES_DATA: Article[] = [
   {
     id: "a1",
+    slug: "a1",
     icon: "dna",
     category: "พันธุศาสตร์",
     title: "DNA replication จำอย่างไรให้ไม่สับสน",
     link: "#",
+    excerpt: "เรียนรู้กลไกการจำลอง DNA แบบเข้าใจง่าย พร้อมเทคนิคจดจำที่ใช้ได้จริงในข้อสอบ",
   },
   {
     id: "a2",
+    slug: "a2",
     icon: "heart-pulse",
     category: "สรีรวิทยา",
     title: "สรุประบบไหลเวียนเลือดใน 10 นาที",
     link: "#",
+    excerpt: "ทำความเข้าใจการไหลเวียนเลือดทั้งวงจรเล็กและวงจรใหญ่ พร้อมแผนภาพชัดเจน",
   },
   {
     id: "a3",
+    slug: "a3",
     icon: "leaf",
     category: "พืช",
     title: "Photosynthesis ตั้งแต่พื้นฐานถึงข้อสอบ",
     link: "#",
+    excerpt: "ครอบคลุมทั้ง Light reaction และ Calvin cycle อธิบายให้เข้าใจได้ตั้งแต่ ม.4",
   },
 ];
+

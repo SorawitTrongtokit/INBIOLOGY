@@ -88,6 +88,42 @@ export function useArticles(): AsyncState<Article[]> {
   return state;
 }
 
+export function useArticle(slug: string): AsyncState<Article | undefined> {
+  const [state, setState] = useState<AsyncState<Article | undefined>>({
+    data: undefined,
+    isLoading: true,
+    error: null,
+  });
+
+  useEffect(() => {
+    let isActive = true;
+    setState({ data: undefined, isLoading: true, error: null });
+
+    getArticles()
+      .then((articles) => {
+        if (isActive) {
+          const article = articles.find((a) => a.id === slug);
+          setState({ data: article, isLoading: false, error: null });
+        }
+      })
+      .catch((error: unknown) => {
+        if (isActive) {
+          setState({
+            data: undefined,
+            isLoading: false,
+            error: getErrorMessage(error),
+          });
+        }
+      });
+
+    return () => {
+      isActive = false;
+    };
+  }, [slug]);
+
+  return state;
+}
+
 export function useCourse(code: string): AsyncState<{
   course?: Course;
   reviews: Review[];

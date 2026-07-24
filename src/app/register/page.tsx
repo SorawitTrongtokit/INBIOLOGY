@@ -326,11 +326,11 @@ export default function RegisterPage() {
                   />
                   <span>
                     ฉันได้อ่านและยอมรับ{" "}
-                    <a href="#" className="text-bio-green font-bold hover:underline">
+                    <a href="/terms" className="text-bio-green font-bold hover:underline">
                       ข้อกำหนดการใช้งาน
                     </a>{" "}
                     และ{" "}
-                    <a href="#" className="text-bio-green font-bold hover:underline">
+                    <a href="/privacy" className="text-bio-green font-bold hover:underline">
                       นโยบายความเป็นส่วนตัว
                     </a>
                   </span>

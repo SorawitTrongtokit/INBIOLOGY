@@ -305,6 +305,7 @@ export async function getClassroomData(
   const { data: enrollment, error: enrollmentError } = await supabase
     .from("enrollments")
     .select("course_id,status,enrolled_at,expires_at")
+    .eq("user_id", user.id)
     .eq("course_id", courseResult.data.id)
     .maybeSingle();
   if (enrollmentError) throw enrollmentError;

@@ -9,8 +9,24 @@ const notoSansThai = Noto_Sans_Thai({
 });
 
 export const metadata: Metadata = {
-  title: "inbio — เรียนชีวะ เข้าใจง่าย เก่งได้จริง",
-  description: "inbio เว็บไซต์เรียนชีววิทยาออนไลน์สำหรับนักเรียนมัธยม",
+  metadataBase: new URL("https://inbiology.vercel.app"),
+  title: {
+    default: "inbio — เรียนชีวะ เข้าใจง่าย เก่งได้จริง",
+    template: "%s | inbio",
+  },
+  description: "inbio เว็บไซต์เรียนชีววิทยาออนไลน์สำหรับนักเรียนมัธยม ครอบคลุม ม.4–ม.6 และ TCAS A-Level",
+  openGraph: {
+    type: "website",
+    siteName: "inbio",
+    locale: "th_TH",
+    title: "inbio — เรียนชีวะ เข้าใจง่าย เก่งได้จริง",
+    description: "inbio เว็บไซต์เรียนชีววิทยาออนไลน์สำหรับนักเรียนมัธยม ครอบคลุม ม.4–ม.6 และ TCAS A-Level",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "inbio — เรียนชีวะ เข้าใจง่าย เก่งได้จริง",
+    description: "inbio เว็บไซต์เรียนชีววิทยาออนไลน์สำหรับนักเรียนมัธยม",
+  },
 };
 
 export default function RootLayout({
